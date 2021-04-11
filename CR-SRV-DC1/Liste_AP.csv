@@ -1,0 +1,8 @@
+Name,IPAddress
+pfsensePublic.chl.loc,172.16.15.254
+pfsenseServicesOP.chl.loc,172.16.23.254
+pfsenseLabo.chl.loc,172.16.25.254
+pfsenseR&D.chl.loc,172.16.27.254
+pfsenseRadiologie.chl.loc,172.16.29.254
+pfsensePharmacie.chl.loc,172.16.31.254
+pfsenseInformatique.chl.loc,172.16.32.190
