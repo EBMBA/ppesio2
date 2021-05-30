@@ -1,0 +1,9 @@
+---
+- name: Apache2 reload
+  become: yes
+  action: service name=apache2 state=reloaded
+
+- name: Apache2 restart
+  become: yes
+  action: service name=apache2 state=restarted
+...

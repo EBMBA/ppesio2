@@ -1,0 +1,12 @@
+---
+- name : Installation des serveurs web 
+  hosts : web_covid
+  remote_user: emile
+  vars: 
+    domain: covid.chl.loc
+    ListenPort: 80
+
+
+  roles:
+    - Apache2PHP
+...

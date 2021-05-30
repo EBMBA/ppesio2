@@ -1,0 +1,15 @@
+<VirtualHost *:{{ ListenPort }}>
+    ServerName {{ domain }}
+
+    DocumentRoot "/var/www/html"
+
+    <Directory "/var/www/html">
+        Options FollowSymLinks
+        AllowOverride all
+        Require all granted
+    </Directory>
+
+    ErrorLog /var/log/apache2/error.{{ domain }}.log
+    CustomLog /var/log/apache2/access.{{ domain }}.log combined
+
+</VirtualHost>

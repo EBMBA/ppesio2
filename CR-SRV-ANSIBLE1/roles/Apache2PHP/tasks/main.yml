@@ -1,0 +1,49 @@
+---
+- name: Install 
+  become : yes 
+  apt : 
+    name={{ item }}
+    update_cache=yes
+    state=lastest
+  with_items:
+    - apache2 
+    - php
+    - libapache2-mod-php
+    - php-mysql
+    - php-curl 
+    - php-gd 
+    - php-intl
+    - php-json
+    - php-mbstring
+    - php-xml
+    - php-zip
+  
+- name: Start 
+  become: yes
+  service: 
+    name=apache2
+    state=started 
+    enabled=true
+
+- name: Configuration Apache2
+  template: 
+    src:templates/covid.chl.loc.conf.j2 
+    dest:/etc/apache2/sites-available/{{ domain }}.conf
+
+- name: Activation du domaine {{ domain }}
+  become: yes
+  command: a2ensite {{ domain }}
+  args:
+    creates: /etc/apache2/sites-enabled/{{ domain }}.conf
+  notify:
+    - Apache2 restart
+
+- name: Desactivation de la configuration par defaut
+  become: yes
+  command: a2dissite 000-default.conf
+  args:
+    creates: /etc/apache2/sites-enabled/{{ domain }}.conf
+  notify:
+    - Apache2 reload
+
+...
