@@ -9,4 +9,11 @@
 
   roles:
     - Apache2PHP
+
+- name: Installation des serveurs de base de données
+  hosts: database_covid
+  remote_user: emile
+  vars: 
+    mysql_root_password: 123+aze
+    mysql_cluster_name: sql_cluster_covid
 ...

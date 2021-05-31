@@ -1,0 +1,80 @@
+---
+- name: Install 
+  become: yes
+  apt: 
+    name=mariadb-server
+    update_cache=yes
+    state=latest
+  
+- name: Start 
+  become: yes
+  service: 
+    name=mariadb
+    state=started 
+    enabled=true
+
+- name: Install Python MySQL
+  apt:
+    pkg="python-mysqldb" 
+    state=present
+
+- name: MySQL_Secure_Installation sets root password 
+  mysql_user: 
+    user=root 
+    password="{{ mysql_root_password }}"
+    host=localhost
+
+- name: MySQL_Secure_Installation deletes anonymous MySQL server user for ansible_fqdn
+  mysql_user:
+    user=""
+    host="{{ ansible_fqdn }}"
+    state="absent"
+
+- name: MySQL_Secure_Installation deletes anonymous MySQL server user for localhost
+  mysql_user: 
+    user="" 
+    state="absent"
+
+- name: MySQL_Secure_Installation remove root remote acccess IPv6
+  mysql_user:
+    user="root "
+    password="{{ mysql_root_password }}" 
+    host="::1"
+
+- name: MySQL_Secure_Installation root user for IPV4 localhost (127.0.0.1)
+  mysql_user: 
+    user="root" 
+    password="{{ mysql_root_password }}" 
+    host="127.0.0.1"
+
+- name: SMySQL_Secure_Installation root user for localhost domain (localhost)
+  mysql_user: 
+    user="root" 
+    password="{{ mysql_root_password }}" 
+    host="localhost"
+
+- name: MySQL_Secure_Installation root user for server_hostname domain
+  mysql_user:
+    user="root" 
+    password="{{ mysql_root_password }}" 
+    host="{{ ansible_fqdn }}"
+
+- name: MySQL_Secure_Installation remove the MySQL test database
+  mysql_db:
+    db=test
+    state=absent
+
+- name: Create database users with all database privileges 
+  mysql_user:
+    user={{ item }}
+    password="123+aze"
+    host="%"
+    priv= '*.*:ALL'
+    state= present
+  with_items:
+    - emile
+    - victor
+  notify: 
+   -  Mariadb reload
+
+...

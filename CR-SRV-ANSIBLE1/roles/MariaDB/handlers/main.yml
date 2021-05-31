@@ -1,0 +1,7 @@
+---
+- name: Mariadb reload
+  become: yes 
+  action: service 
+    name=mariadb 
+    state=reloaded
+...

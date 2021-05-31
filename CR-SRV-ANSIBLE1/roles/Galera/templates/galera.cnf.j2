@@ -1,0 +1,29 @@
+[mysqld]
+
+binlog_format=ROW
+default-storage-engine=innodb
+innodb_autoinc_lock_mode=2
+bind-address=0.0.0.0
+
+# Configuration de Galera par le fournisseur
+
+wsrep_on=ON
+wsrep_provider=/usr/lib/galera/libgalera_smm.so
+
+# Configuration du cluster Galera 
+
+wsrep_cluster_name="{{ mysql_cluster_name }}" 
+wsrep_cluster_address="gcomm://172.16.33.23,172.16.33.24”
+
+# Configuration de la synchronisation Galera
+wsrep_sst_method=rsync
+
+# Configuration des noeuds de Galera 
+
+wsrep_node_address="{{ ansible_default_ipv4.address }}" 
+wsrep_node_name="{{ ansible_fqdn }}"
+
+[mysql_safe]
+
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
