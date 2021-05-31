@@ -2,9 +2,9 @@
 - name: Install rsync 
   become: yes
   apt:
-    name=rsync
-    update_cache=yes
-    state=latest
+    name: rsync
+    update_cache: yes
+    state: latest
 
 - name: Configuration Galera 
   become: yes
@@ -29,14 +29,22 @@
   ufw:
     rule: allow
     port: 4567
-    proto: tcp  
+    proto: udp  
 
-- name: Stop mysql
+- name: Stop mariadb
   become: yes
-  action: service 
-    name=mysql
-    state=stopped
+  service:
+    name: mariadb
+    state: stopped
 
 - name: Start galera new cluster script   
+  become: yes
+  ansible.builtin.command:
+    cmd: galera_new_cluster
 
+- name: Start mariadb
+  become: yes
+  service:  
+    name: mariadb
+    state: started
 ...

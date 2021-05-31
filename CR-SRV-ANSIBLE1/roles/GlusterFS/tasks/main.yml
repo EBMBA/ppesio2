@@ -1,0 +1,55 @@
+---
+- name: Install 
+  become: yes
+  apt: 
+    name: glusterfs-server
+    update_cache: yes
+    state: latest
+
+- name: Start
+  become: yes
+  service:
+    name: glusterd
+    state: started
+    enabled: true
+
+- name: Configure peer probe 
+  become: yes
+  gluster_peer:
+    state: present
+    nodes: 
+      - 172.16.33.23
+      - 172.16.33.24
+
+- name: Create directory mkdir 
+  become: yes
+  ansible.builtin.command:
+    command: mkdir /data
+
+- name: create & start gluster volume 
+  become: yes
+  gluster_volume:
+    state: present
+    name: html
+    bricks: /data/html
+    rebalance: yes
+    replicas: 2
+    start_on_create: yes
+    cluster: 
+      - 172.16.33.23
+      - 172.16.33.24
+
+- name: install glusterfs-client
+  become: yes
+  apt: 
+    name: glusterfs-client
+    update_cache: yes
+    state: latest
+
+- name: Mount in fstab 
+  become: yes
+  lineinfile :
+    path: /etc/fstab 
+    line: 172.16.33.23:/html /var/www/html glusterfs _netdev,fetch-attempts=10 0 0 
+
+...

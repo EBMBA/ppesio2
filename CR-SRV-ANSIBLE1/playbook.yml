@@ -16,4 +16,8 @@
   vars: 
     mysql_root_password: 123+aze
     mysql_cluster_name: sql_cluster_covid
+  
+  roles: 
+    - MariaDB
+    - Galera
 ...
