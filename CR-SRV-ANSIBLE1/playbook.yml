@@ -9,6 +9,7 @@
 
   roles:
     - Apache2PHP
+    - GlusterFS
 
 - name: Installation des serveurs de base de données
   hosts: database_covid

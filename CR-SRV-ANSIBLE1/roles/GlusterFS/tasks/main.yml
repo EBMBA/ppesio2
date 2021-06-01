@@ -52,4 +52,9 @@
     path: /etc/fstab 
     line: 172.16.33.23:/html /var/www/html glusterfs _netdev,fetch-attempts=10 0 0 
 
+- name: Mount 
+  become: yes
+  ansible.builtin.command:
+    cmd: mount -a
+
 ...
