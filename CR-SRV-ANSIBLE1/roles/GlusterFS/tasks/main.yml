@@ -23,8 +23,10 @@
 
 - name: Create directory mkdir 
   become: yes
-  ansible.builtin.command:
-    command: mkdir /data
+  file:
+    path: /data
+    state: directory
+
 
 - name: create & start gluster volume 
   become: yes
@@ -32,12 +34,12 @@
     state: present
     name: html
     bricks: /data/html
-    rebalance: yes
     replicas: 2
     start_on_create: yes
     cluster: 
       - 172.16.33.23
       - 172.16.33.24
+    force: yes
 
 - name: install glusterfs-client
   become: yes

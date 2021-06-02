@@ -14,59 +14,69 @@
     enabled: true
 
 - name: Install Python MySQL
+  become: yes
   apt:
     pkg: "python-mysqldb" 
     state: present
 
 - name: MySQL_Secure_Installation sets root password 
+  become: yes
   mysql_user: 
     user: root 
     password: "{{ mysql_root_password }}"
     host: localhost
 
 - name: MySQL_Secure_Installation deletes anonymous MySQL server user for ansible_fqdn
+  become: yes
   mysql_user:
     user: ""
     host: "{{ ansible_fqdn }}"
     state: "absent"
 
 - name: MySQL_Secure_Installation deletes anonymous MySQL server user for localhost
+  become: yes
   mysql_user: 
     user: "" 
     state: "absent"
 
 - name: MySQL_Secure_Installation remove root remote acccess IPv6
+  become: yes
   mysql_user:
     user: "root "
     password: "{{ mysql_root_password }}" 
     host: "::1"
 
 - name: MySQL_Secure_Installation root user for IPV4 localhost (127.0.0.1)
+  become: yes
   mysql_user: 
     user: "root" 
     password: "{{ mysql_root_password }}" 
     host: "127.0.0.1"
 
 - name: SMySQL_Secure_Installation root user for localhost domain (localhost)
+  become: yes
   mysql_user: 
     user: "root" 
     password: "{{ mysql_root_password }}" 
     host: "localhost"
 
 - name: MySQL_Secure_Installation root user for server_hostname domain
+  become: yes
   mysql_user:
     user: "root" 
     password: "{{ mysql_root_password }}" 
     host: "{{ ansible_fqdn }}"
 
 - name: MySQL_Secure_Installation remove the MySQL test database
+  become: yes
   mysql_db:
     db: test
     state: absent
 
 - name: Create database users with all database privileges 
+  become: yes
   mysql_user:
-    user: {{ item }}
+    user: "{{ item }}"
     password: "123+aze"
     host: "%"
     priv:  '*.*:ALL'

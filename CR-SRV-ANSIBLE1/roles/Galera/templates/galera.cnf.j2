@@ -13,9 +13,10 @@ wsrep_provider=/usr/lib/galera/libgalera_smm.so
 # Configuration du cluster Galera 
 
 wsrep_cluster_name="{{ mysql_cluster_name }}" 
-wsrep_cluster_address="gcomm://172.16.33.23,172.16.33.24”
+wsrep_cluster_address=gcomm://172.16.33.23,172.16.33.24
 
 # Configuration de la synchronisation Galera
+
 wsrep_sst_method=rsync
 
 # Configuration des noeuds de Galera 

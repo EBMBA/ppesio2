@@ -2,9 +2,9 @@
 - name: Install 
   become : yes 
   apt : 
-    name: {{ item }}
+    name: "{{ item }}"
     update_cache: yes
-    state: lastest
+    state: latest
   with_items:
     - apache2 
     - php
@@ -26,6 +26,7 @@
     enabled: true
 
 - name: Configuration Apache2
+  become: yes
   template: 
     src: templates/covid.chl.loc.conf.j2 
     dest: /etc/apache2/sites-available/{{ domain }}.conf

@@ -16,9 +16,9 @@
   become: yes 
   ufw:
     rule: allow
-    port: {{ item }}
+    port: "{{ item }}"
     proto: tcp
-  loop: 
+  with_items: 
     - 3306
     - 4567
     - 4568
@@ -28,7 +28,7 @@
   become: yes 
   ufw:
     rule: allow
-    port: 4567
+    port: "4567"
     proto: udp  
 
 - name: Stop mariadb
@@ -41,6 +41,7 @@
   become: yes
   ansible.builtin.command:
     cmd: galera_new_cluster
+  when: inventory_hostname in groups['master_web_covid']
 
 - name: Start mariadb
   become: yes
