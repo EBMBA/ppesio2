@@ -27,7 +27,6 @@
     path: /data
     state: directory
 
-
 - name: create & start gluster volume 
   become: yes
   gluster_volume:

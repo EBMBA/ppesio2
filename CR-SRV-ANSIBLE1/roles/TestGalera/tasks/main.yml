@@ -1,0 +1,42 @@
+---
+- name: Create a database on node
+  mysql_db:
+    login_user: "emile"
+    login_host: "%"
+    login_password: "123+aze"
+    name: playground
+    state: present
+  when : inventory_hostname in groups['master_web_covid']
+
+- name: Insert data on database 
+  command : 
+    cmd: mysql -u emile -p 123+aze -e 'CREATE DATABASE playground; 
+      CREATE TABLE playground.equipment ( id INT NOT NULL AUTO_INCREMENT, type VARCHAR(50), quant INT, color VARCHAR(25), PRIMARY KEY(id));
+      INSERT INTO playground.equipment (type, quant, color) VALUES ("slide", 2, "blue");'
+  when: inventory_hostname in groups['master_web_covid']
+
+- name: Wait for replication
+  pause:
+    minutes: 1
+    prompt: "Waiting for replication"
+
+- name: check if DB exists
+  shell: mysql --user=emile --password=123+aze -e 'SELECT * FROM playground.equipment;'
+  register: dbstatus
+  failed_when: dbstatus.rc == 2
+
+- name: Check if it's created on other nodes
+  become: yes
+  debug:
+    msg:"DB exists on {{ ansible_default_ipv4.address }}"
+  when: dbstatus.rc != 2
+
+- name: Remove DB 
+  mysql_db:
+    login_user: "emile"
+    login_host: "%"
+    login_password: "123+aze"
+    name: playground
+    state: absent
+  when : inventory_hostname in groups['master_web_covid'] 
+...
