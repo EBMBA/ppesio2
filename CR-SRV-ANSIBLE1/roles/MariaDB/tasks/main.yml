@@ -83,8 +83,5 @@
     state: present
   with_items:
     - emile
-    - victor
-  notify: 
-   -  Mariadb reload
 
 ...
