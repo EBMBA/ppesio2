@@ -1,0 +1,18 @@
+---
+- name: Test de la configuration de la replication des fichiers 
+  hosts: web_covid
+  remote_user: emile
+
+  roles:
+    - TestGlusterFS
+
+- name: Test de la configuration de la replication des bases de données
+  hosts: database_covid
+  remote_user: emile
+  mysql_root_user: emile
+  mysql_root_host: "%"
+  mysql_root_password: 123+aze
+
+  roles: 
+    - TestGalera
+...

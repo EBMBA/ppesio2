@@ -1,0 +1,48 @@
+---
+- name : Installation des serveurs web 
+  hosts : new_nodes_web_covid
+  remote_user: emile
+  vars: 
+    domain: covid.chl.loc
+    ListenPort: 80
+
+
+  roles:
+    - Apache2PHP
+    
+- name: Installation des serveurs de base de données
+  hosts: new_nodes_database_covid
+  remote_user: emile
+  vars: 
+    mysql_root_password: 123+aze
+    mysql_cluster_name: sql_cluster_covid
+  
+  roles: 
+    - MariaDB
+  
+- name: Ajout d'un nouveau noeud au cluster web
+  hosts: web_covid:new_nodes_web_covid
+  remote_user: emile
+  vars:
+    domain: covid.chl.loc
+    ListenPort: 80
+    new_node: 172.16.33.25
+    number_replicas: 3
+  
+  roles:
+    - AddNewNodeGlusterFS
+
+- name: Ajout d'un nouveau noeud au cluster db 
+  hosts: database_covid:new_nodes_database_covid
+  remote_user: emile
+  vars: 
+    mysql_root_password: 123+aze
+    mysql_cluster_name: sql_cluster_covid
+    nodes: 
+      - 172.16.33.23
+      - 172.16.33.24
+      - 172.16.33.25
+  
+  roles:
+    - AddNewNodeGalera
+...

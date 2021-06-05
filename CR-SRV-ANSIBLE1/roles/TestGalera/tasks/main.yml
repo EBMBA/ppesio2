@@ -1,41 +1,51 @@
 ---
 - name: Create a database on node
   mysql_db:
-    login_user: "emile"
-    login_host: "%"
-    login_password: "123+aze"
+    login_user: "{{ mysql_root_user }}"
+    login_host: "{{ mysql_root_host }}"
+    login_password: "{{ mysql_root_password }}"
     name: playground
     state: present
   when : inventory_hostname in groups['master_web_covid']
 
 - name: Insert data on database 
-  command : 
-    cmd: mysql -u emile -p 123+aze -e 'CREATE DATABASE playground; 
-      CREATE TABLE playground.equipment ( id INT NOT NULL AUTO_INCREMENT, type VARCHAR(50), quant INT, color VARCHAR(25), PRIMARY KEY(id));
-      INSERT INTO playground.equipment (type, quant, color) VALUES ("slide", 2, "blue");'
-  when: inventory_hostname in groups['master_web_covid']
+  mysql_query:
+    login_user: "{{ mysql_root_user }}"
+    login_host: "{{ mysql_root_host }}"
+    login_password: "{{ mysql_root_password }}"
+    login_db: playground
+    query:
+      - CREATE TABLE playground.equipment ( id INT NOT NULL AUTO_INCREMENT, type VARCHAR(50), quant INT, color VARCHAR(25), PRIMARY KEY(id))
+      - INSERT INTO playground.equipment (type, quant, color) VALUES ("slide", 2, "blue")
+  when : inventory_hostname in groups['master_web_covid']
 
 - name: Wait for replication
   pause:
-    minutes: 1
+    secondes: 30
     prompt: "Waiting for replication"
 
 - name: check if DB exists
-  shell: mysql --user=emile --password=123+aze -e 'SELECT * FROM playground.equipment;'
-  register: dbstatus
-  failed_when: dbstatus.rc == 2
+  mysql_query:
+    login_user: "{{ mysql_root_user }}"
+    login_host: "{{ mysql_root_host }}"
+    login_password: "{{ mysql_root_password }}"
+    login_db: playground
+    query:
+      - SELECT * FROM playground.equipment
+  register: result_db 
 
 - name: Check if it's created on other nodes
   become: yes
   debug:
-    msg:"DB exists on {{ ansible_default_ipv4.address }}"
-  when: dbstatus.rc != 2
+    msg:
+      - "{{ ansible_default_ipv4.address }} ':'  "
+      - "{{ result_db }}"
 
 - name: Remove DB 
   mysql_db:
-    login_user: "emile"
-    login_host: "%"
-    login_password: "123+aze"
+    login_user: "{{ mysql_root_user }}"
+    login_host: "{{ mysql_root_host }}"
+    login_password: "{{ mysql_root_password }}"
     name: playground
     state: absent
   when : inventory_hostname in groups['master_web_covid'] 

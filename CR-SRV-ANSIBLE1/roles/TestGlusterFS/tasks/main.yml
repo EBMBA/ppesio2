@@ -2,41 +2,31 @@
 - name: Create files on one node 
   become: yes
   file:
-    path: /data/html/testfile
+    path: /var/www/html/testfile
     state: touch
   when: inventory_hostname in groups['master_web_covid']
 
 - name: Wait for duplication
   pause:
-    minutes: 2
+    secondes: 30
     prompt: "Waiting for replication"
 
 - name: Check that the file exists
   stat:
-    path: /data/html/testfile
+    path: /var/www/html/testfile
   register: stat_result
+  when: inventory_hostname not in groups['master_web_covid']
 
 - name: Check if it's created on other nodes
   become: yes
   debug:
     msg:"Test file exists on {{ ansible_default_ipv4.address }} "
   when: stat_result.stat.exists
-  
-- name: Check if file is in all www/html/
-  stat:
-    path: /var/www/html/testfile
-  register: stat_resultWWW
-
-- name: Check if it's created on other nodes
-  become: yes
-  debug:
-    msg:"Test file exists on {{ ansible_default_ipv4.address }} in web server directory"
-  when: stat_resultWWW.stat.exists
 
 - name: Remove test file 
   become: yes
   file:
-    path: /data/html/testfile
+    path: /var/www/html/testfile
     state: absent
   when: inventory_hostname in groups['master_web_covid']
 ...

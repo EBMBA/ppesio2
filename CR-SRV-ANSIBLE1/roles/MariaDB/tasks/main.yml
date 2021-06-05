@@ -89,5 +89,6 @@
     state: present
   with_items:
     - emile
+    - victor
 
 ...
