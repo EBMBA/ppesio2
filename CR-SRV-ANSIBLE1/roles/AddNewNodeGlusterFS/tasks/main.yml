@@ -18,8 +18,8 @@
   gluster_peer:
     state: present
     nodes: 
-      - 172.16.33.23
-      - 172.16.33.24
+      - {{ new_node }}
+  when: inventory_hostname in groups['master_web_covid']
 
 - name: Create directory mkdir 
   become: yes
@@ -33,13 +33,12 @@
     state: present
     name: html
     bricks: /data/html
-    replicas: 2
+    replicas: {{ number_replicas }}
     start_on_create: yes
     cluster: 
-      - 172.16.33.23
-      - 172.16.33.24
+      - {{ new_node }}
     force: yes
-  run_once: yes
+  when: inventory_hostname in groups['master_web_covid']
 
 - name: install glusterfs-client
   become: yes
@@ -58,5 +57,4 @@
   become: yes
   ansible.builtin.command:
     cmd: mount -a
-
 ...

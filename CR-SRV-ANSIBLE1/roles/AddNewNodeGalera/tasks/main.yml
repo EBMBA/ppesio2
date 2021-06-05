@@ -1,0 +1,45 @@
+---
+- name: Install rsync 
+  become: yes
+  apt:
+    name: rsync
+    update_cache: yes
+    state: latest
+
+- name: Stop mariadb
+  become: yes
+  service:
+    name: mariadb
+    state: stopped
+
+- name: Configuration Galera 
+  become: yes
+  template: 
+    src: templates/galera.cnf.j2
+    dest: /etc/mysql/conf.d/galera.cnf
+
+- name: Allow throught firewall tcp traffic 
+  become: yes 
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: tcp
+  with_items: 
+    - 3306
+    - 4567
+    - 4568
+    - 4444
+
+- name: Allow throught firewall udp traffic 
+  become: yes 
+  ufw:
+    rule: allow
+    port: "4567"
+    proto: udp  
+    
+- name: Start mariadb
+  become: yes
+  service:  
+    name: mariadb
+    state: started
+...
