@@ -59,7 +59,7 @@
       - 172.16.33.24
       - 172.16.33.25
   
-  role:
+  roles:
     - AddNewNodeGalera
 
 

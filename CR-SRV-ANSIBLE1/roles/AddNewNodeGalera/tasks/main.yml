@@ -36,7 +36,13 @@
     rule: allow
     port: "4567"
     proto: udp  
-    
+  
+- name: Start galera new cluster script   
+  become: yes
+  ansible.builtin.command:
+    cmd: galera_new_cluster
+  when: inventory_hostname in groups['new_nodes_covid']
+
 - name: Start mariadb
   become: yes
   service:  

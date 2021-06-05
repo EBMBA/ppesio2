@@ -1,10 +1,15 @@
 [web_covid]
 172.16.33.23 ansible_ssh_pass=123+aze ansible_sudo_pass=123+aze
 172.16.33.24 ansible_ssh_pass=123+aze ansible_sudo_pass=123+aze
+172.16.33.25 ansible_ssh_pass=123+aze ansible_sudo_pass=123+aze
 
 [database_covid]
 172.16.33.23 ansible_ssh_pass=123+aze ansible_sudo_pass=123+aze
 172.16.33.24 ansible_ssh_pass=123+aze ansible_sudo_pass=123+aze
+172.16.33.25 ansible_ssh_pass=123+aze ansible_sudo_pass=123+aze
 
 [master_web_covid]
 172.16.33.23 ansible_ssh_pass=123+aze ansible_sudo_pass=123+aze
+
+[new_nodes_covid]
+172.16.33.25 ansible_ssh_pass=123+aze ansible_sudo_pass=123+aze

@@ -5,19 +5,25 @@
     name: mariadb-server
     update_cache: yes
     state: latest
-  
-- name: Start 
-  become: yes
-  service: 
-    name: mariadb
-    state: started 
-    enabled: true
 
 - name: Install Python MySQL
   become: yes
   apt:
     pkg: "python-mysqldb" 
     state: present
+
+- name: "Install ansible python3 mysql dependency"
+  become: yes
+  apt:
+    name: python3-mysqldb
+    state: latest
+
+- name: Start 
+  become: yes
+  service: 
+    name: mariadb
+    state: started 
+    enabled: true
 
 - name: MySQL_Secure_Installation sets root password 
   become: yes

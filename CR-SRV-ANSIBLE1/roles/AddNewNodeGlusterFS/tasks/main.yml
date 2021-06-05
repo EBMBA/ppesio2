@@ -18,7 +18,7 @@
   gluster_peer:
     state: present
     nodes: 
-      - {{ new_node }}
+      - "{{ new_node }}"
   when: inventory_hostname in groups['master_web_covid']
 
 - name: Create directory mkdir 
@@ -33,10 +33,10 @@
     state: present
     name: html
     bricks: /data/html
-    replicas: {{ number_replicas }}
+    replicas: "{{ number_replicas }}"
     start_on_create: yes
     cluster: 
-      - {{ new_node }}
+      - "{{ new_node }}"
     force: yes
   when: inventory_hostname in groups['master_web_covid']
 
