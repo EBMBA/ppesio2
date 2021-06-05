@@ -1,17 +1,20 @@
 ---
+- name: Install PyMySQL 
+  become: yes
+  apt :
+    name: python-pymysql
+
 - name: Create a database on node
   mysql_db:
     login_user: "{{ mysql_root_user }}"
-    login_host: "{{ mysql_root_host }}"
     login_password: "{{ mysql_root_password }}"
     name: playground
     state: present
   when : inventory_hostname in groups['master_web_covid']
 
 - name: Insert data on database 
-  mysql_query:
+  community.mysql.mysql_query:
     login_user: "{{ mysql_root_user }}"
-    login_host: "{{ mysql_root_host }}"
     login_password: "{{ mysql_root_password }}"
     login_db: playground
     query:
@@ -21,13 +24,12 @@
 
 - name: Wait for replication
   pause:
-    secondes: 30
+    seconds: 30
     prompt: "Waiting for replication"
 
 - name: check if DB exists
-  mysql_query:
+  community.mysql.mysql_query:
     login_user: "{{ mysql_root_user }}"
-    login_host: "{{ mysql_root_host }}"
     login_password: "{{ mysql_root_password }}"
     login_db: playground
     query:
@@ -44,7 +46,6 @@
 - name: Remove DB 
   mysql_db:
     login_user: "{{ mysql_root_user }}"
-    login_host: "{{ mysql_root_host }}"
     login_password: "{{ mysql_root_password }}"
     name: playground
     state: absent

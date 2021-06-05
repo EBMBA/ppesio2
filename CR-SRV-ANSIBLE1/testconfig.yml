@@ -6,12 +6,12 @@
   roles:
     - TestGlusterFS
 
-- name: Test de la configuration de la replication des bases de données
+- name: Test de la configuration de la replication des bases de donnees
   hosts: database_covid
   remote_user: emile
-  mysql_root_user: emile
-  mysql_root_host: "%"
-  mysql_root_password: 123+aze
+  vars:
+    mysql_root_user: emile
+    mysql_root_password: 123+aze
 
   roles: 
     - TestGalera

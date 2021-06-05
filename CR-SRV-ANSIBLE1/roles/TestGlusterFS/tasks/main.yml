@@ -8,19 +8,18 @@
 
 - name: Wait for duplication
   pause:
-    secondes: 30
+    seconds: 30
     prompt: "Waiting for replication"
 
 - name: Check that the file exists
   stat:
     path: /var/www/html/testfile
   register: stat_result
-  when: inventory_hostname not in groups['master_web_covid']
 
-- name: Check if it's created on other nodes
+- name: Debug message if it's exists
   become: yes
   debug:
-    msg:"Test file exists on {{ ansible_default_ipv4.address }} "
+    msg: "Test file exists on {{ ansible_default_ipv4.address }} "
   when: stat_result.stat.exists
 
 - name: Remove test file 
