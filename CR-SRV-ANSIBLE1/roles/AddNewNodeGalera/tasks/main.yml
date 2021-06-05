@@ -41,7 +41,7 @@
   become: yes
   ansible.builtin.command:
     cmd: galera_new_cluster
-  when: inventory_hostname in groups['new_nodes_covid']
+  when: inventory_hostname in groups['new_nodes_database_covid']
 
 - name: Start mariadb
   become: yes
