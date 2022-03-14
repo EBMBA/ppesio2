@@ -42,7 +42,7 @@ foreach ($OrganizationalUnitDNItem in $OrganizationalUnitDN) {
 
     # Read security information for computers | /I:S : Sub objects only
     dsacls.exe $OrganizationalUnitDNItem /G $UserAccount":RC;;Computer" /I:S | Out-Null
-gl <3
+
     # Change security information for computers | /I:S : Sub objects only
     dsacls.exe $OrganizationalUnitDNItem /G $UserAccount":WD;;Computer" /I:S  | Out-Null
 
